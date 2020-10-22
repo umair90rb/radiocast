@@ -28,7 +28,7 @@ class _SignInScreenState extends State<SignInScreen> {
 
   Future signUp(username, password) async {
     final response = await http.get(
-      apiUri+'/user/read_one.php?user=$username&pass=$password',
+      apiUri+'/customer/read_one.php?user=$username&pass=$password',
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
       },
@@ -104,7 +104,7 @@ class _SignInScreenState extends State<SignInScreen> {
                     if(response == true) {
                       Navigator.pushNamed(
                         context,
-                        '/home',
+                        '/podcasts',
                       );
                     } else {
                       print(response['msg'].toString());

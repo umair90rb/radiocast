@@ -62,7 +62,7 @@ class _SunshineState extends State<Sunshine> {
       title: 'RadioCast',
       theme: theme,
       routes: routes,
-      initialRoute: global.noInternet == true  ? '/noInternet' : global.isLoggedIn == true ? '/home': '/signIn',
+      initialRoute: global.noInternet == true  ? '/noInternet' : global.isLoggedIn == true ? '/podcasts': '/signIn',
     );
   }
 }

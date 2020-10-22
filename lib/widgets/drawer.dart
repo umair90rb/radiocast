@@ -5,31 +5,33 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 var drawerRoutes = [
-  '/products',
-  '/purchases',
-  '/sales',
-  '/vouchers',
-  '/returns',
-  '/quotations',
-  '/users',
+  '/podcasts',
+  '/search',
+  '/yourPodcasts',
+  '/favourite',
   '/setting',
-  '/reports',
-  '/home',
 ];
 
 
 
 var drawerText = [
-  "Product",
-  "Purchase",
-  "Sales",
-  "Voucher",
-  "Return",
-  "Quotation",
-  "User",
-  "Settings",
-  "Report",
-  "Help & feedback"
+
+  "Podcasts",
+  "Search Podcasts",
+  "Your Podcasts",
+  "Your Favourite",
+  "Setting",
+
+];
+
+var drawerIcon = [
+
+  Icons.music_note,
+  Icons.search,
+  Icons.library_music,
+  Icons.favorite,
+  Icons.settings
+
 ];
 var cxt;
 var drawer = Drawer(
@@ -40,19 +42,20 @@ var drawer = Drawer(
     Padding(
       padding: const EdgeInsets.symmetric(vertical: 10),
       child: SizedBox(
-        height: 100,
-        child: Card(
-          child:  Center(
-            child: ListTile(
-              leading: CircleAvatar(
-                backgroundColor: Colors.white,
-                radius: 30,
-                child: Image.asset("assets/icons/icon.png"),
-              ),
-              title: Text('Sunshine', style: TextStyle(fontSize: 30),),
+        height: 200,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            CircleAvatar(
+              backgroundColor: Colors.white,
+              radius: 60,
+              child: Image.asset('assets/pngegg.png'),
             ),
-          ),
-        ),
+            Text('Podcast App')
+          ],
+        ) 
+        
       ),
     ),
 
@@ -65,6 +68,7 @@ var drawer = Drawer(
           itemBuilder: (context, position) {
             cxt = context;
             return ListTile(
+              leading: Icon(drawerIcon[position]),
               title: Text(drawerText[position],
                   style: TextStyle(fontSize: 15.0)),
               onTap: () {
@@ -85,7 +89,7 @@ var drawer = Drawer(
         print(path);
         final dir = Directory(path);
         dir.deleteSync(recursive: true);
-        Navigator.pushNamed(cxt, '/firstScreen');
+        Navigator.pushNamed(cxt, '/signIn');
       },
     )
   ],

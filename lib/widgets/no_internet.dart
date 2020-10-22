@@ -19,7 +19,7 @@ class _NoInternetState extends State<NoInternet> {
             SizedBox(height: 20,),
             Text('Oops!', style: Theme.of(context).textTheme.headline,),
             SizedBox(height: 10,),
-            Text("It seems there is something wrong with you internet connection. Please connect to internet and start SUNSHINE again.", textAlign: TextAlign.center, style: Theme.of(context).textTheme.body1,),
+            Text("It seems there is something wrong with you internet connection. Please connect to internet and start app again.", textAlign: TextAlign.center, style: Theme.of(context).textTheme.body1,),
           ],
         ),
       ),
