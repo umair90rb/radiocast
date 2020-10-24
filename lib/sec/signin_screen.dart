@@ -12,12 +12,12 @@ import '../global.dart' as global;
 import '../api.dart';
 
 
-class SignInScreen extends StatefulWidget {
+class SecSignInScreen extends StatefulWidget {
   @override
-  _SignInScreenState createState() => _SignInScreenState();
+  _SecSignInScreenState createState() => _SecSignInScreenState();
 }
 
-class _SignInScreenState extends State<SignInScreen> {
+class _SecSignInScreenState extends State<SecSignInScreen> {
 
   final _formKey = GlobalKey<FormState>();
   final _username = TextEditingController();
@@ -28,7 +28,7 @@ class _SignInScreenState extends State<SignInScreen> {
 
   Future signUp(username, password) async {
     final response = await http.get(
-      apiUri+'/customer/read_one.php?user=$username&pass=$password',
+      apiUri+'/sec/read_one.php?user=$username&pass=$password',
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
       },
@@ -37,7 +37,7 @@ class _SignInScreenState extends State<SignInScreen> {
     if (response.statusCode == 200) {
       print(json.decode(response.body));
       await ReadWriteFile().writeData(response.body);
-      global.user = User.fromJson(jsonDecode(response.body));
+      global.secuser = jsonDecode(response.body);
       return true;
     } else {
       print(json.decode(response.body));
@@ -72,8 +72,8 @@ class _SignInScreenState extends State<SignInScreen> {
         height: MediaQuery.of(context).size.height,
         decoration: BoxDecoration(
             image: DecorationImage(
-                image: AssetImage('assets/m-1.png',),
-              fit: BoxFit.fill
+                image: AssetImage('assets/m-3.jpg',),
+                fit: BoxFit.fill
             )
         ),
         child: SingleChildScrollView(
@@ -88,7 +88,7 @@ class _SignInScreenState extends State<SignInScreen> {
               //   ],
               // ),
               SizedBox(height: MediaQuery.of(context).size.height *0.1,),
-              Text('Sign In to your account', style: Theme.of(context).textTheme.title,),
+              Text('Sign In to your Secondary Profile', style: Theme.of(context).textTheme.title,),
 
               signUpForm(),
 
@@ -112,7 +112,7 @@ class _SignInScreenState extends State<SignInScreen> {
                       if(response == true) {
                         Navigator.pushNamed(
                           context,
-                          '/podcasts',
+                          '/secProfile',
                         );
                       } else {
                         print(response['msg'].toString());

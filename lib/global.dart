@@ -8,3 +8,5 @@ var purchaseId;
 var quotationId;
 var returnId;
 var voucherId;
+
+var secuser;

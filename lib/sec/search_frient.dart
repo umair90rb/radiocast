@@ -3,18 +3,19 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:podcast/home/singlepodcast.dart';
+import 'package:podcast/sec/friend_profile.dart';
 import '../api.dart';
 import 'package:http/http.dart' as http;
 
 import '../widgets/input.dart';
 
 
-class SearchPod extends StatefulWidget {
+class SearchFriend extends StatefulWidget {
   @override
-  _SearchPodState createState() => _SearchPodState();
+  _SearchFriendState createState() => _SearchFriendState();
 }
 
-class _SearchPodState extends State<SearchPod> {
+class _SearchFriendState extends State<SearchFriend> {
 
   TextEditingController _search = TextEditingController();
   List result = List();
@@ -23,19 +24,19 @@ class _SearchPodState extends State<SearchPod> {
 
 
 
-      final response = await http.get(
-        apiUri+'/product/search.php?query=${query}',
-        headers: <String, String>{
-          'Content-Type': 'application/json; charset=UTF-8',
-        },
-      );
+    final response = await http.get(
+      apiUri+'/customer/search.php?query=${query}',
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+    );
 
-      if (response.statusCode == 200) {
-        return json.decode(response.body);
-      } else {
-        print(json.decode(response.body));
-        return (json.decode(response.body));
-      }
+    if (response.statusCode == 200) {
+      return json.decode(response.body);
+    } else {
+      print(json.decode(response.body));
+      return (json.decode(response.body));
+    }
 
 
   }
@@ -48,32 +49,32 @@ class _SearchPodState extends State<SearchPod> {
           backgroundColor: Theme.of(context).buttonColor,
           onPressed: () async {
             if(_search.text.isEmpty) return Fluttertoast.showToast(
-                  msg: "Please enter a query first.",
-                  toastLength: Toast.LENGTH_SHORT,
-                  gravity: ToastGravity.BOTTOM,
+                msg: "Please enter a query first.",
+                toastLength: Toast.LENGTH_SHORT,
+                gravity: ToastGravity.BOTTOM,
 
-                  backgroundColor: Colors.black,
-                  textColor: Colors.white,
-                  fontSize: 16.0
-              );
+                backgroundColor: Colors.black,
+                textColor: Colors.white,
+                fontSize: 16.0
+            );
             var res = await search(_search.text);
             result = [];
             res['records'].forEach((d){
 
               result.add(
-                  CurvedListItem(thumbnail: d['thumbnail'], podcast: d['podcast'], title:d['title'], user: d['username'], id: d['id'],)
+                  CurvedListItem(thumbnail: d['profile'], title:d['username'], user: d['email'], id: d['id'],)
               );
               setState(() {              });
             });
             print(res);
           }),
       appBar: AppBar(
-        title: Text('Search Podcast'),
+        title: Text('Search Friend'),
       ),
       body: Column(
         children: [
           SizedBox(height: 15,),
-          formInputField('Search Podcast', _search, helperText: "Type query and press button.", icon: Icon(Icons.search), onChanged: (text){
+          formInputField('Search Friend', _search, helperText: "Type query and press button.", icon: Icon(Icons.search), onChanged: (text){
             print(text);
           }),
           SizedBox(height: 15,),
@@ -93,14 +94,12 @@ class CurvedListItem extends StatefulWidget {
   CurvedListItem({
     this.title,
     this.thumbnail,
-    this.podcast,
     this.user,
     this.id
   });
 
   final String title;
   final String thumbnail;
-  final String podcast;
   final String user;
   final String id;
 
@@ -114,7 +113,7 @@ class _CurvedListItemState extends State<CurvedListItem> {
 
   @override
   Widget build(BuildContext context) {
-    print(widget.podcast);
+
     return Padding(
       padding: const EdgeInsets.all(20.0),
       child: ListTile(
@@ -125,17 +124,17 @@ class _CurvedListItemState extends State<CurvedListItem> {
                 border: Border.all(color: Colors.grey, width: 1, style: BorderStyle.solid),
                 borderRadius: BorderRadius.circular(15),
                 image: DecorationImage(
-                    image: NetworkImage('https://4kradiopodcast.com/upload1/${widget.thumbnail}')
+                    image: NetworkImage('https://4kradiopodcast.com/upload/${widget.thumbnail}')
                 )
             ),
           ),
           title: Text(widget.title),
           subtitle: Text(widget.user),
-          trailing: Icon(Icons.music_note),
+          trailing: Icon(Icons.arrow_forward),
           onTap: (){
             Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => SignlePodcast(widget.title, widget.thumbnail, widget.podcast, widget.user, widget.id)));
+                MaterialPageRoute(builder: (context) => FriendProfile(id: widget.id, frnduser: widget.title, profile: widget.thumbnail,)));
 
           }
       ),

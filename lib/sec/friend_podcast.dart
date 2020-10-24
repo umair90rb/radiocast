@@ -13,12 +13,15 @@ import '../widgets/drawer.dart';
 import '../api.dart';
 
 
-class Home extends StatefulWidget {
+class FriendPodcast extends StatefulWidget {
+  String username;
+
+  FriendPodcast({this.username});
   @override
-  _HomeState createState() => _HomeState();
+  _FriendPodcastState createState() => _FriendPodcastState();
 }
 
-class _HomeState extends State<Home> {
+class _FriendPodcastState extends State<FriendPodcast> {
 
   AudioPlayer audioPlayer = AudioPlayer();
 
@@ -28,7 +31,7 @@ class _HomeState extends State<Home> {
   Future signUp() async {
     print(global.user.username);
     final response = await http.get(
-      apiUri+'/product/read.php?id='+global.user.username,
+      apiUri+'/product/read.php?id='+widget.username,
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
       },
@@ -46,7 +49,7 @@ class _HomeState extends State<Home> {
   void initState() {
     super.initState();
     getPodcast = signUp();
-    
+
   }
 
 
@@ -56,48 +59,43 @@ class _HomeState extends State<Home> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        floatingActionButton: FloatingActionButton(
-            child: Icon(Icons.add),
-            backgroundColor: Theme.of(context).buttonColor,
-            onPressed: () {
-              Navigator.pushNamed(context, '/addPodcast');
-            }),
-      drawer: drawer,
-      appBar: AppBar(
-        title: Text('Your Podcasts'),
-      ),
-      body: FutureBuilder(
-          future: getPodcast,
-          builder: (context, snapshot){
-          if(snapshot.hasData){
-            print(snapshot.data['records']);
-            if(snapshot.data['records'] == null) return Center(child: Padding(
-              padding: const EdgeInsets.all(10.0),
-              child: Text('You have no podcast.'),
-            ),);
-            return ListView(
 
-              shrinkWrap: true,
-              children: [
-                // Text('ab'),
-                for(var d in snapshot.data['records']) CurvedListItem(thumbnail: d['thumbnail'], podcast: d['podcast'], title:d['title'], user: d['username'], id: d['id'],)
-              ],
-            );
+        drawer: drawer,
+        appBar: AppBar(
+          title: Text('Your Friends Podcasts'),
+        ),
+        body: FutureBuilder(
+            future: getPodcast,
+            builder: (context, snapshot){
+              if(snapshot.hasData){
+                print(snapshot.data['records']);
+                if(snapshot.data['records'] == null) return Center(child: Padding(
+                  padding: const EdgeInsets.all(10.0),
+                  child: Text('Your friend have no podcast.'),
+                ),);
+                return ListView(
 
-          } else if (snapshot.hasError) {
-          return Text("${snapshot.error}");
-          }
+                  shrinkWrap: true,
+                  children: [
+                    // Text('ab'),
+                    for(var d in snapshot.data['records']) CurvedListItem(thumbnail: d['thumbnail'], podcast: d['podcast'], title:d['title'], user: d['username'], id: d['id'],)
+                  ],
+                );
+
+              } else if (snapshot.hasError) {
+                return Text("${snapshot.error}");
+              }
 
               // By default, show a loading spinner.
               return Container(
-              width: MediaQuery.of(context).size.width,
-          height: MediaQuery.of(context).size.height,
-          child: Center(
-            child: CircularProgressIndicator(
-              valueColor: AlwaysStoppedAnimation<Color>(
-                  Theme.of(context).buttonColor),
-            ),),);
-      })
+                width: MediaQuery.of(context).size.width,
+                height: MediaQuery.of(context).size.height,
+                child: Center(
+                  child: CircularProgressIndicator(
+                    valueColor: AlwaysStoppedAnimation<Color>(
+                        Theme.of(context).buttonColor),
+                  ),),);
+            })
     );
   }
 }

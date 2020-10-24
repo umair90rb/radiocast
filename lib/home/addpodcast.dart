@@ -39,7 +39,7 @@ class _MyAppState extends State<MyApp> {
         compressFormat: ImageCompressFormat.jpg,
         androidUiSettings: AndroidUiSettings(
           toolbarColor: Colors.blue,
-          toolbarTitle: "Sunshine",
+          toolbarTitle: "Crop Image",
           statusBarColor: Colors.black,
           backgroundColor: Colors.white,
         )
@@ -181,7 +181,7 @@ class _MyAppState extends State<MyApp> {
                           msg: "Please select thumbnail.",
                           toastLength: Toast.LENGTH_SHORT,
                           gravity: ToastGravity.BOTTOM,
-                          timeInSecForIosWeb: 1,
+
                           backgroundColor: Colors.black,
                           textColor: Colors.white,
                           fontSize: 16.0
@@ -191,7 +191,7 @@ class _MyAppState extends State<MyApp> {
                           msg: "Please enter podcast title.",
                           toastLength: Toast.LENGTH_SHORT,
                           gravity: ToastGravity.BOTTOM,
-                          timeInSecForIosWeb: 1,
+
                           backgroundColor: Colors.black,
                           textColor: Colors.white,
                           fontSize: 16.0
@@ -203,7 +203,7 @@ class _MyAppState extends State<MyApp> {
                           msg: "Uploading...",
                           toastLength: Toast.LENGTH_SHORT,
                           gravity: ToastGravity.BOTTOM,
-                          timeInSecForIosWeb: 1,
+
                           backgroundColor: Colors.black,
                           textColor: Colors.white,
                           fontSize: 16.0

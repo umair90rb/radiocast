@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/rendering.dart';
 import 'package:http/http.dart' as http;
+import 'package:podcast/home/singlepodcast.dart';
 import '../global.dart' as global;
 import '../widgets/drawer.dart';
 
@@ -75,7 +76,7 @@ Widget build(BuildContext context) {
                 shrinkWrap: true,
                 children: [
                   // Text('ab'),
-                  for(var d in snapshot.data['records']) CurvedListItem(thumbnail: d['thumbnail'], podcast: d['podcast'], title:d['title'], nextColor: Colors.white, color: Colors.blueAccent,)
+                  for(var d in snapshot.data['records']) CurvedListItem(thumbnail: d['thumbnail'], podcast: d['podcast'], title:d['title'], user: d['username'], id: d['id'],)
                 ],
               );
 
@@ -105,15 +106,15 @@ class CurvedListItem extends StatefulWidget {
     this.title,
     this.thumbnail,
     this.podcast,
-    this.color,
-    this.nextColor,
+    this.user,
+    this.id
   });
 
   final String title;
   final String thumbnail;
   final String podcast;
-  final Color color;
-  final Color nextColor;
+  final String user;
+  final String id;
 
   @override
   _CurvedListItemState createState() => _CurvedListItemState();
@@ -126,54 +127,29 @@ class _CurvedListItemState extends State<CurvedListItem> {
   @override
   Widget build(BuildContext context) {
     print(widget.podcast);
-    return Container(
-      color: widget.nextColor,
-      child: Container(
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: ListTile(
+        leading:  Container(
+          width: 60,
+          height: 60,
           decoration: BoxDecoration(
-            color: widget.color,
-            borderRadius: const BorderRadius.only(
-              bottomLeft: Radius.circular(80.0),
-            ),
-          ),
-          padding: const EdgeInsets.only(
-            left: 32,
-            top: 50.0,
-            bottom: 50,
-          ),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: [
-              Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    Text(
-                      widget.title,
-                      style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 22,
-                          fontWeight: FontWeight.bold),
-                    ),
-                    Row(
-                      children: [
-                        IconButton(
-                          icon: Icon(Icons.play_arrow),
-                          onPressed: (){
-                            print(widget.podcast);
-                            audioPlayer.play('https://4kradiopodcast.com/api/file/read.php?file=${widget.podcast}');
-                          },
-                        ),
-                        IconButton(icon: Icon(Icons.pause), onPressed: () => audioPlayer.pause()),
-                        IconButton(icon: Icon(Icons.stop), onPressed: () => audioPlayer.stop())
-                      ],
-                    )
-                  ]),
-              Column(
-                children: [
-                  ClipOval( child: Image.network('https://4kradiopodcast.com/upload1/${widget.thumbnail}', width: 75, height: 75,))
-                ],
+              border: Border.all(color: Colors.grey, width: 1, style: BorderStyle.solid),
+              borderRadius: BorderRadius.circular(15),
+              image: DecorationImage(
+                  image: NetworkImage('https://4kradiopodcast.com/upload1/${widget.thumbnail}')
               )
-            ],
-          )
+          ),
+        ),
+        title: Text(widget.title),
+        subtitle: Text(widget.user),
+        trailing: Icon(Icons.music_note),
+        onTap: (){
+          Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => SignlePodcast(widget.title, widget.thumbnail, widget.podcast, widget.user, widget.id)));
+
+        }
       ),
     );
   }
