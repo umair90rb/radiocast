@@ -72,7 +72,7 @@ class _SignInScreenState extends State<SignInScreen> {
         height: MediaQuery.of(context).size.height,
         decoration: BoxDecoration(
             image: DecorationImage(
-                image: AssetImage('assets/m-1.png',),
+                image: AssetImage('assets/m-4.jpg',),
               fit: BoxFit.fill
             )
         ),
@@ -88,7 +88,7 @@ class _SignInScreenState extends State<SignInScreen> {
               //   ],
               // ),
               SizedBox(height: MediaQuery.of(context).size.height *0.1,),
-              Text('Sign In to your account', style: Theme.of(context).textTheme.title,),
+              Text('Sign In to your account', style: TextStyle(color: Colors.white),),
 
               signUpForm(),
 
@@ -96,7 +96,7 @@ class _SignInScreenState extends State<SignInScreen> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
-                  Text('Forget Password '),
+                  Text('Forget Password ',style: TextStyle(color: Colors.white),),
                   link('Reset your Password', (){
                     Navigator.pushNamed(context, '/passwordReset');
                   })
@@ -131,7 +131,7 @@ class _SignInScreenState extends State<SignInScreen> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
-                  Text('Don\'t have an account? '),
+                  Text('Don\'t have an account? ', style: TextStyle(color: Colors.white),),
                   link('Sign Up now!', (){
                     Navigator.pushNamed(context, '/signUp');
                   })

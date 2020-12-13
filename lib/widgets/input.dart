@@ -14,6 +14,7 @@ Widget formInputField(hint, controller, {Pattern pat = '.', bool isPassword = fa
         isDense: true,
         border: OutlineInputBorder(),
         hintText: hint,
+        hintStyle:  TextStyle(color: Colors.white),
         helperText: helperText
       ),
       validator: (value) {

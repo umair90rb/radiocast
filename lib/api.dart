@@ -1,4 +1,4 @@
 
-var apiUri = 'http://4kradiopodcast.com/api/';
+var apiUri = 'https://4kradiopodcast.com/api/';
 
-var imgUri = 'https://sunshine.com.bd/podcast/';
+var imgUri = 'https://4kradiopodcast.com/';

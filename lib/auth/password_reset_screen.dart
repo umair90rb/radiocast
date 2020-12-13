@@ -65,67 +65,75 @@ class _PasswordResetScreenState extends State<PasswordResetScreen> {
 
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SingleChildScrollView(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
+      body: Container(
+        height: MediaQuery.of(context).size.height,
+        decoration: BoxDecoration(
+            image: DecorationImage(
+                image: AssetImage('assets/img.jpg',),
+                fit: BoxFit.fill
+            )
+        ),
+        child: SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
 
-          children: <Widget>[
-            SizedBox(height: MediaQuery.of(context).size.height *0.040,),
-            Row(
-              children: <Widget>[
-                IconButton(icon: Icon(Icons.arrow_back), onPressed: ()=>{Navigator.pop(context)})
-              ],
-            ),
-            SizedBox(height: MediaQuery.of(context).size.height *0.1,),
-            Image.asset('assets/icons/login_register.png', scale: 3,),
-            Text('Password Reset Request', style: Theme.of(context).textTheme.title,),
-            SizedBox(height: 10,),
-            Padding(padding: EdgeInsets.symmetric(vertical:20, horizontal: 40) ,child: Text('Enter your email address we will mail you the password reset instructions.', textAlign: TextAlign.justify, style: Theme.of(context).textTheme.body1,)),
-            signUpForm(),
-            SizedBox(height: 10,),
-            button(0.8, context, "Send Reset Instructions", () async {
-              if (_formKey.currentState.validate()) {
-                  showDialog(context: context, child: pleaseWait(context));
-                  var response = await passwordReset(_email.text,);
-                  Navigator.pop(context);
-                  if(response['status'] == 200) {
-                    showDialog(context: context, child: showResponse(context, "One step ahead!", [response['message']]));
-                    showDialog(
-                      context: context,
-                      child: AlertDialog(
-                        title: Text('One more step.'),
-                        content: Text(response['message']+' We send you password reset instructions.'),
-                        actions: <Widget>[
-                          FlatButton(
-                            child: Text('OK'),
-                            onPressed: () {
-                              Navigator.pushNamed(context, '/');
-                            },
-                          ),
-                        ],
-                      ),
-                    );
+            children: <Widget>[
+              SizedBox(height: MediaQuery.of(context).size.height *0.040,),
+              Row(
+                children: <Widget>[
+                  IconButton(icon: Icon(Icons.arrow_back), onPressed: ()=>{Navigator.pop(context)})
+                ],
+              ),
+              SizedBox(height: MediaQuery.of(context).size.height *0.1,),
+              Text('Password Reset Request', style: TextStyle(color: Colors.white),),
+              SizedBox(height: 10,),
+              Padding(padding: EdgeInsets.symmetric(vertical:20, horizontal: 40) ,child: Text('Enter your email address we will mail you the password reset instructions.', textAlign: TextAlign.justify, style: TextStyle(color: Colors.white),)),
+              signUpForm(),
+              SizedBox(height: 10,),
+              button(0.8, context, "Send Reset Instructions", () async {
+                if (_formKey.currentState.validate()) {
+                    showDialog(context: context, child: pleaseWait(context));
+                    var response = await passwordReset(_email.text,);
+                    Navigator.pop(context);
+                    if(response['status'] == 200) {
+                      showDialog(context: context, child: showResponse(context, "One step ahead!", [response['message']]));
+                      showDialog(
+                        context: context,
+                        child: AlertDialog(
+                          title: Text('One more step.'),
+                          content: Text(response['message']+' We send you password reset instructions.'),
+                          actions: <Widget>[
+                            FlatButton(
+                              child: Text('OK'),
+                              onPressed: () {
+                                Navigator.pushNamed(context, '/');
+                              },
+                            ),
+                          ],
+                        ),
+                      );
 
-                } else {
-                  print(response['error'].toString());
-                  errors.add("${response['error'].toString()}");
-                  showDialog(context: context, child: showResponse(context, "Something Wrong! Try Again", errors));
-                  errors.clear();
+                  } else {
+                    print(response['error'].toString());
+                    errors.add("${response['error'].toString()}");
+                    showDialog(context: context, child: showResponse(context, "Something Wrong! Try Again", errors));
+                    errors.clear();
+                  }
+
                 }
-
-              }
-            }, Theme.of(context).buttonColor),
-            SizedBox(height: 10,),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                Text('Unless you change your password '),
-                link('Login Now!', (){
-                  Navigator.pushNamed(context, '/signIn');
-                })
-              ],
-            ),
-          ],
+              }, Theme.of(context).buttonColor),
+              SizedBox(height: 10,),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  Text('Unless you change your password ', style: TextStyle(color: Colors.white),),
+                  link('Login Now!', (){
+                    Navigator.pushNamed(context, '/signIn');
+                  })
+                ],
+              ),
+            ],
+          ),
         ),
       ),
     );

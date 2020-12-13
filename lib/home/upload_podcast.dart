@@ -60,11 +60,12 @@ class _UplaodPodcastState extends State<UplaodPodcast> {
       });
     }
   }
-
-  File photo;
   String podcast;
 
   TextEditingController _title = TextEditingController();
+
+  File photo;
+
 
   final picker = ImagePicker();
   Future chooseImage() async {
@@ -126,87 +127,89 @@ class _UplaodPodcastState extends State<UplaodPodcast> {
       appBar: AppBar(
         title: Text('Upload Your Podcast'),
       ),
-      body: Column(
-        children: [
-          SizedBox(height: 10,),
-          formInputField("Podcast Title", _title, validation: true),
-          Text("Podcast Thumbnail"),
-          image(),
-          Text("Podcast file"),
-          new Padding(
-            padding: const EdgeInsets.only(top: 50.0, bottom: 20.0),
-            child: new RaisedButton(
-              onPressed: () async {
-                  podcast = await FilePicker.getFilePath(
-                  type: FileType.audio, );
-                  print(basename(podcast));
-              },
-              child: new Text("Open file picker"),
+      body: SingleChildScrollView(
+        child: Column(
+          children: [
+            SizedBox(height: 10,),
+            formInputField("Podcast Title", _title, validation: true),
+            Text("Podcast Thumbnail"),
+            image(),
+            Text("Podcast file"),
+            new Padding(
+              padding: const EdgeInsets.only(top: 50.0, bottom: 20.0),
+              child: new RaisedButton(
+                onPressed: () async {
+                    podcast = await FilePicker.getFilePath(
+                    type: FileType.audio, );
+                    print(basename(podcast));
+                },
+                child: new Text("Open file picker"),
+              ),
             ),
-          ),
-          button(20, context, "Upload Podcast", () async {
+            button(20, context, "Upload Podcast", () async {
 
-            if(photo == null) return Fluttertoast.showToast(
-                msg: "Please select thumbnail.",
-                toastLength: Toast.LENGTH_SHORT,
-                gravity: ToastGravity.BOTTOM,
+              if(photo == null) return Fluttertoast.showToast(
+                  msg: "Please select thumbnail.",
+                  toastLength: Toast.LENGTH_SHORT,
+                  gravity: ToastGravity.BOTTOM,
 
-                backgroundColor: Colors.black,
-                textColor: Colors.white,
-                fontSize: 16.0
-            );
+                  backgroundColor: Colors.black,
+                  textColor: Colors.white,
+                  fontSize: 16.0
+              );
 
-            if(_title.text.isEmpty) return Fluttertoast.showToast(
-                msg: "Please enter podcast title.",
-                toastLength: Toast.LENGTH_SHORT,
-                gravity: ToastGravity.BOTTOM,
+              if(_title.text.isEmpty) return Fluttertoast.showToast(
+                  msg: "Please enter podcast title.",
+                  toastLength: Toast.LENGTH_SHORT,
+                  gravity: ToastGravity.BOTTOM,
 
-                backgroundColor: Colors.black,
-                textColor: Colors.white,
-                fontSize: 16.0
-            );
+                  backgroundColor: Colors.black,
+                  textColor: Colors.white,
+                  fontSize: 16.0
+              );
 
-            if(podcast == null) return Fluttertoast.showToast(
-                msg: "Please select podcast.",
-                toastLength: Toast.LENGTH_SHORT,
-                gravity: ToastGravity.BOTTOM,
+              if(podcast == null) return Fluttertoast.showToast(
+                  msg: "Please select podcast.",
+                  toastLength: Toast.LENGTH_SHORT,
+                  gravity: ToastGravity.BOTTOM,
 
-                backgroundColor: Colors.black,
-                textColor: Colors.white,
-                fontSize: 16.0
-            );
-
-
-
-            Fluttertoast.showToast(
-                msg: "Uploading...",
-                toastLength: Toast.LENGTH_SHORT,
-                gravity: ToastGravity.BOTTOM,
-
-                backgroundColor: Colors.black,
-                textColor: Colors.white,
-                fontSize: 16.0
-            );
+                  backgroundColor: Colors.black,
+                  textColor: Colors.white,
+                  fontSize: 16.0
+              );
 
 
 
-            await uploadPodcast(_title.text, photo, podcast);
+              Fluttertoast.showToast(
+                  msg: "Uploading...",
+                  toastLength: Toast.LENGTH_SHORT,
+                  gravity: ToastGravity.BOTTOM,
 
-            _title.text = '';
+                  backgroundColor: Colors.black,
+                  textColor: Colors.white,
+                  fontSize: 16.0
+              );
 
 
-          }, Colors.blueAccent)
-        ],
+
+              await uploadPodcast(_title.text, photo, podcast);
+
+              _title.text = '';
+
+
+            }, Colors.blueAccent)
+          ],
+        ),
       ),
     );
   }
 
 
-  final uploader = FlutterUploader();
+
   var p = 0 ;
   String r;
 
-
+  final uploader = FlutterUploader();
   Future uploadPodcast(title, photo, podcast) async {
 
     print(basename(photo.path.toString()));

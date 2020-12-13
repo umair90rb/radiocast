@@ -1,4 +1,5 @@
 
+import 'dart:convert';
 import 'dart:math' as math;
 
 import 'package:audioplayers/audioplayers.dart';
@@ -43,12 +44,12 @@ class _SignlePodcastState extends State<SignlePodcast> with TickerProviderStateM
         'channel_ID', 'channel name', 'channel description',
         importance: Importance.Max,
         priority: Priority.High,
+
         ticker: 'test ticker');
 
     var iOSChannelSpecifics = IOSNotificationDetails();
     var platformChannelSpecifics = NotificationDetails(
         androidPlatformChannelSpecifics, iOSChannelSpecifics);
-
     await flutterLocalNotificationsPlugin.show(int.parse(id), "Running Podcast.",
         "$title by $body", platformChannelSpecifics,
         payload: "{ id:$id, title:$title, body:$body, thumbnail:$thumbnail, podcast:$podcast}");
@@ -72,6 +73,7 @@ class _SignlePodcastState extends State<SignlePodcast> with TickerProviderStateM
         vsync: this
     );
     checkFavourite(global.user.username, widget.title, widget.thumbnail, widget.podcast);
+    getMaxDuration();
     super.initState();
   }
 
@@ -103,13 +105,42 @@ class _SignlePodcastState extends State<SignlePodcast> with TickerProviderStateM
     return "$twoDigitMinutes:$twoDigitSeconds";
   }
   String displayDuration = "00:00";
-  String displayMaxDuration = "04:30";
+  String displayMaxDuration = "0";
+  String formatedDuration = "00:00:00";
+
+  bool seekBarVisibility = false;
+  getMaxDuration() async {
+
+    final response = await http.get(
+      apiUri+'file/duration.php?file=${widget.podcast}',
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+    );
+
+    if(response.statusCode == 200){
+        var r = jsonDecode(response.body);
+        print(r['duration']);
+        print(r['formated']);
+        setState(() {
+
+          displayMaxDuration = r['duration'].toString();
+          seekBarVisibility = true;
+          formatedDuration = r['formated'];
+
+        });
+    }
+
+  }
   getDuration(){
     audioPlayer.onAudioPositionChanged.listen((Duration  p) {
       print('Current position:${p.inSeconds}');
       setState(() {
         displayDuration = _printDuration(p);
         value = double.parse("${p.inSeconds}");
+        if(double.parse(displayMaxDuration) == value) {
+          controller.stop();
+        }
       });
 
     });
@@ -216,28 +247,39 @@ class _SignlePodcastState extends State<SignlePodcast> with TickerProviderStateM
               ),
 
               SizedBox(height: 30,),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  Text(displayDuration, style: TextStyle(color: Colors.grey, fontWeight: FontWeight.w400, fontSize: 14),),
-                  SizedBox(
-                    width: MediaQuery.of(context).size.width - 150,
-                    child: Slider(
-                      value: value,
-                      onChanged: (newValue){
-                        setState(() {
-                          value = newValue;
-                        });
-                        print(value);
-                      },
+              // Row(
+              //   mainAxisAlignment: MainAxisAlignment.center,
+              //   crossAxisAlignment: CrossAxisAlignment.center
+              //   ,
+              //   children: [
+              //     Text(displayDuration, style: TextStyle(color: Colors.grey, fontWeight: FontWeight.w400, fontSize: 14),),
+              //   ],
+              // ),
+              Visibility(
+                visible: seekBarVisibility,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    Text(displayDuration, style: TextStyle(color: Colors.grey, fontWeight: FontWeight.w400, fontSize: 14),),
+                    SizedBox(
+                      width: MediaQuery.of(context).size.width - 150,
+                      child: Slider(
+                        value: value,
+                        onChanged: (newValue){
+                          setState(() {
+                            value = newValue;
+                          });
+                          print(value);
+                        },
 
-                      min: 0,
-                      max: 270,
+                        min: 0,
+                        max: double.parse(displayMaxDuration),
 
+                      ),
                     ),
-                  ),
-                  Text(displayMaxDuration, style: TextStyle(color: Colors.grey, fontWeight: FontWeight.w400, fontSize: 14),),
-                ],
+                    Text(formatedDuration, style: TextStyle(color: Colors.grey, fontWeight: FontWeight.w400, fontSize: 14),),
+                  ],
+                ),
               ),
               SizedBox(height: 30,),
               Row(

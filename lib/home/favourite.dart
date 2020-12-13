@@ -2,10 +2,12 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:audio_service/audio_service.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:audioplayers/audioplayers.dart';
 import 'package:http/http.dart' as http;
+import 'package:podcast/MusicPlayer/MusicPlayerScreen.dart';
 import 'package:podcast/home/singlepodcast.dart';
 import '../global.dart' as global;
 import '../widgets/drawer.dart';
@@ -101,6 +103,7 @@ class _FavouriteState extends State<Favourite> {
   }
 }
 
+
 class CurvedListItem extends StatefulWidget {
 
 
@@ -110,7 +113,7 @@ class CurvedListItem extends StatefulWidget {
     this.thumbnail,
     this.podcast,
     this.user,
-    this.id,
+    this.id
   });
 
   final String title;
@@ -133,28 +136,52 @@ class _CurvedListItemState extends State<CurvedListItem> {
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: ListTile(
-          leading:  Container(
-            width: 60,
-            height: 60,
-            decoration: BoxDecoration(
-                border: Border.all(color: Colors.grey, width: 1, style: BorderStyle.solid),
-                borderRadius: BorderRadius.circular(15),
-                image: DecorationImage(
-
-                    image: NetworkImage('https://4kradiopodcast.com/upload1/${widget.thumbnail}')
-                )
-            ),
+        leading:  Container(
+          width: 60,
+          height: 60,
+          decoration: BoxDecoration(
+              border: Border.all(color: Colors.grey, width: 1, style: BorderStyle.solid),
+              borderRadius: BorderRadius.circular(15),
+              image: DecorationImage(
+                  image: NetworkImage('$imgUri/upload1/${widget.thumbnail}')
+              )
           ),
-          title: Text(widget.title),
-          subtitle: Text(widget.user),
-          trailing: Icon(Icons.favorite, color: Colors.orange,),
-          onTap: (){
-            Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => SignlePodcast(widget.title, widget.thumbnail, widget.podcast, widget.user, widget.id)));
+        ),
+        title: Text(widget.title),
+        subtitle: Text(widget.user),
+        trailing: Icon(Icons.music_note),
+        onTap: () async {
+          var duration = await getMaxDuration(widget.podcast);
+          Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) =>
+              AudioServiceWidget(child: BGAudioPlayerScreen(
+                id:"$imgUri/podcast/${widget.podcast}",
+                title: "${widget.title}",
+                duration: int.parse(duration)*1000,
+                artUri: "$imgUri/upload1/${widget.thumbnail}",
+                podcast: "${widget.podcast}",
+                thumbnail: "${widget.thumbnail}",
+              )
+                  // SignlePodcast(widget.title, widget.thumbnail, widget.podcast, widget.user, widget.id)
+              )));
 
-          }
+        }
       ),
     );
   }
+}
+getMaxDuration(file) async {
+
+  final response = await http.get(
+    apiUri+'file/duration.php?file=$file',
+    headers: <String, String>{
+      'Content-Type': 'application/json; charset=UTF-8',
+    },
+  );
+
+  if(response.statusCode == 200){
+    return response.body;
+  }
+
 }

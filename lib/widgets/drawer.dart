@@ -1,8 +1,12 @@
 import 'dart:io';
+import 'package:podcast/api.dart';
+
 import '../utility/read_write_file.dart';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+
+import '../global.dart' as global;
 
 var drawerRoutes = [
   '/podcasts',
@@ -50,9 +54,9 @@ var drawer = Drawer(
             CircleAvatar(
               backgroundColor: Colors.white,
               radius: 60,
-              child: Image.asset('assets/pngegg.png'),
+              child: Image.network(imgUri+'upload/'+global.user.profile),
             ),
-            Text('Podcast App')
+            Text("Welcome ${global.user.username.toString()}")
           ],
         ) 
         

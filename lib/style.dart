@@ -14,6 +14,7 @@ final theme = ThemeData(
       headline: TextStyle(fontSize: 24,),
       title: TextStyle(
         fontSize: 18,
+
       ),
       subtitle: TextStyle(
         fontSize: 16,
